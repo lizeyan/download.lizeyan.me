@@ -8,6 +8,9 @@ CONTENT_TEMPLATE = """
     <title>Download</title>
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <style>
+    body {
+        font-family: "Microsoft Yahei UI", serif;
+    }
     .center-inner-control {
         max-width: 1024px;
         margin-left: auto;
@@ -17,7 +20,7 @@ CONTENT_TEMPLATE = """
     </head>
     <body>
     <div class=\"page-header text-center\">
-    <h1> Welcome to download.lizeyan.me</h1>
+    <h1> Welcome to <a href="#">download.lizeyan.me</a></h1>
     </div>
         %s
     <script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
@@ -58,6 +61,10 @@ def generate(path, root=False, depth=0):
     """
     rst = "<ul class=\"list-group collapse text-left center-inner-control %s\" id=\"%s\">" % ("in" if root else "", path.replace('/', '_'))
     for entry in os.listdir(path):
+        if entry.startswith("."):
+            continue
+        if root and entry == "wsgi.py":
+            continue
         f_abs = os.path.join(path, entry)
         if os.path.isdir(f_abs):
             f_id = f_abs.replace("/", "_")
