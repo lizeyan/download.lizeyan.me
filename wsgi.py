@@ -2,10 +2,12 @@ import os
 
 
 HOME = "/home/lizeyan/avail-download"
+HOST = "https://download.lizeyan.me"
 CONTENT_TEMPLATE = """
 <html>
     <head>
     <title>Download</title>
+    <ling rel="shortcut icon" href="//download.lizeyan.me/img/download.ico">
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <style>
     body {
@@ -20,7 +22,7 @@ CONTENT_TEMPLATE = """
     </head>
     <body>
     <div class=\"page-header text-center\">
-    <h1> Welcome to <a href="#">download.lizeyan.me</a></h1>
+    <h1> Welcome to <a href="https://download.lizeyan.me">download.lizeyan.me</a></h1>
     </div>
         %s
     <script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
@@ -60,6 +62,11 @@ def generate(path, root=False, depth=0):
     @return string of html tag
     """
     rst = "<ul class=\"list-group collapse text-left center-inner-control %s\" id=\"%s\">" % ("in" if root else "", path.replace('/', '_'))
+    if root:
+        parent = os.path.relpath(os.path.realpath(os.path.join(path, "..")), HOME)
+        rst += "<li class=\"list-group-item\"><a class=\"button btn btn-info\" href=\"%s/%s\">..</a>" % (HOST, parent)
+        # rst += "<a href=\"%s/%s\"><span class=\"glyphicon glyphicon-share-alt\"/></a>" % (HOST, parent)
+        rst += "</li>"
     for entry in os.listdir(path):
         if entry.startswith("."):
             continue
@@ -67,9 +74,11 @@ def generate(path, root=False, depth=0):
             continue
         f_abs = os.path.join(path, entry)
         if os.path.isdir(f_abs):
-            f_id = f_abs.replace("/", "_")
-            rst += "<li class=\"list-group-item\"><button class=\"btn btn-info\" data-toggle=\"collapse\" data-target=\"#%s\" aria-expanded=\"true\" aria-controls=\"%s\">%s</button>" % (f_id, f_id, entry)
-            rst += generate(f_abs, depth=depth+1)
+            # f_id = f_abs.replace("/", "_")
+            rst += "<li class=\"list-group-item\"><a class=\"button btn btn-info\" href=\"%s/%s\">%s</a>" % (HOST, os.path.relpath(f_abs, HOME), entry)
+            # rst += "<li class=\"list-group-item\"><button class=\"btn btn-info\" data-toggle=\"collapse\" data-target=\"#%s\" aria-expanded=\"true\" aria-controls=\"%s\">%s</button>" % (f_id, f_id, entry)
+            # rst += "<a href=\"%s/%s\"><span class=\"glyphicon glyphicon-share-alt\"/></a>" % (HOST, os.path.relpath(f_abs, HOME))
+            # rst += generate(f_abs, depth=depth+1)
             rst += "</li>"
         else:
             rst += "<li class=\"inline list-group-item\">%s<a href=\"/%s\"><button class=\"btn btn-success\">%s</button></li></a>" % ("<span class=\"glyphicon glyphicon-arrow-right\"><span>" * depth, os.path.relpath(f_abs, HOME), entry)
