@@ -16,7 +16,7 @@ def application(environ, start_response):
     body = b""
     if not os.path.exists(path):
         start_response('200 OK', [('Content-Type', 'text/html')])
-        body += json.dumps([])
+        body += json.dumps([]).encode("utf-8")
     elif not os.path.isdir(path):
         if path.endswith((".html", ".htm", ".txt", ".md", ".js", ".css")):
             start_response('200 OK', [('Content-Type', 'text/html')])
@@ -34,5 +34,5 @@ def application(environ, start_response):
                 results.append({"name": f, "url": HOST + "/" + rel_path, "type": "dir"})
             else:
                 results.append({"name": f, "url": HOST + "/" + rel_path, "type": "file", "size": os.path.getsize(real_path)})
-        body += json.dumps(results)
+        body += json.dumps(results).encode("utf-8")
     return [body]
