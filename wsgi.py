@@ -2,7 +2,7 @@ import os
 import json
 
 
-HOME = "/home/lizeyan/avail-download"
+HOME = "/home/lizeyan/interface"
 HOST = "https://download.lizeyan.me"
 
 
@@ -13,7 +13,7 @@ def application(environ, start_response):
     @return body of html document
     """
     body = b""
-    path = os.path.realpath(os.path.join(HOME, environ['PATH_INFO'].lstrip("/")))
+    path = os.path.abspath(os.path.join(HOME, environ['PATH_INFO'].lstrip("/")))
     rel = os.path.relpath(path, HOME)
     if not os.path.exists(path):
         start_response('200 OK', [('Content-Type', 'text/html')])
